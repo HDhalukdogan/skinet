@@ -12,7 +12,7 @@ namespace API.Extensions
 
                 var securitySchema = new OpenApiSecurityScheme
                 {
-                    Description = "JWT Auth Bearerr Scheme",
+                    Description = "JWT Auth Bearer Scheme",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.Http,

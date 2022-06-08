@@ -1,6 +1,6 @@
 using StackExchange.Redis;
 using Core.Entities.Identity;
-
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +41,13 @@ app.UseStatusCodePagesWithReExecute("/errors/{0}");
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "Content")
+    ),
+    RequestPath = "/content"
+});
 
 app.UseCors("CorsPolicy");
 
@@ -51,6 +58,7 @@ app.UseAuthorization();
 app.UseSwaggerDocumentation();
 
 app.MapControllers();
+app.MapFallbackToController("Index", "Fallback");
 
 using (var scope = app.Services.CreateScope())
 {
