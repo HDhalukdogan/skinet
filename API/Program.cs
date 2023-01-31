@@ -26,12 +26,14 @@ app.UseHttpsRedirection();
 app.UseSwaggerDocumentation();
 
 app.UseStaticFiles();
-//app.UseStaticFiles(new StaticFileOptions
-//{
-//    FileProvider = new PhysicalFileProvider(
-//        Path.Combine(Directory.GetCurrentDirectory(), "Content")),
-//    RequestPath = "/Content"
-//});
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "Content")
+    ),
+    RequestPath = "/content"
+});
 
 app.UseCors("CorsPolicy");
 
@@ -41,6 +43,7 @@ app.UseAuthorization();
 
 
 app.MapControllers();
+app.MapFallbackToController("Index", "Fallback");
 
 using (var scope = app.Services.CreateScope())
 {
