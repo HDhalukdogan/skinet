@@ -9,14 +9,22 @@ namespace API.Extensions
     {
         public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration config)
         {
-            var builder = services.AddIdentityCore<AppUser>();
-            builder = new IdentityBuilder(builder.UserType, builder.Services);
-            builder.AddEntityFrameworkStores<AppIdentityDbContext>();
-            builder.AddSignInManager<SignInManager<AppUser>>();
+            services.AddDbContext<AppIdentityDbContext>(opt =>
+            {
+                opt.UseSqlite(config.GetConnectionString("IdentityConnection"));
+            });
+
+            services.AddIdentityCore<AppUser>(opt =>
+            {
+                // add identity options here
+            })
+            .AddEntityFrameworkStores<AppIdentityDbContext>()
+            .AddSignInManager<SignInManager<AppUser>>();
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
-                    options.TokenValidationParameters = new  TokenValidationParameters
+                    options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Token:Key"])),
@@ -25,6 +33,10 @@ namespace API.Extensions
                         ValidateAudience = false
                     };
                 });
+
+
+            services.AddAuthorization();
+
             return services;
         }
     }

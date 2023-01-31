@@ -1,30 +1,13 @@
 using StackExchange.Redis;
 using Core.Entities.Identity;
-
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddAutoMapper(typeof(MappingProfiles));
 builder.Services.AddControllers();
-builder.Services.AddDbContext<StoreContext>(x => x.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddDbContext<AppIdentityDbContext>(x => x.UseSqlite(builder.Configuration.GetConnectionString("IdentityConnection")));
-builder.Services.AddSingleton<IConnectionMultiplexer>(c =>
-{
-    var configuration = ConfigurationOptions.Parse(builder.Configuration.GetConnectionString("Redis"), true);
-    return ConnectionMultiplexer.Connect(configuration);
-});
-
-
-builder.Services.AddApplicationServices();
+builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddIdentityServices(builder.Configuration);
 builder.Services.AddSwaggerDocumentation();
-builder.Services.AddCors(opt =>
-{
-    opt.AddPolicy("CorsPolicy", policy =>
-    {
-        policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200");
-    });
-});
 
 var app = builder.Build();
 
@@ -40,7 +23,15 @@ app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
 app.UseHttpsRedirection();
 
+app.UseSwaggerDocumentation();
+
 app.UseStaticFiles();
+//app.UseStaticFiles(new StaticFileOptions
+//{
+//    FileProvider = new PhysicalFileProvider(
+//        Path.Combine(Directory.GetCurrentDirectory(), "Content")),
+//    RequestPath = "/Content"
+//});
 
 app.UseCors("CorsPolicy");
 
@@ -48,7 +39,6 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.UseSwaggerDocumentation();
 
 app.MapControllers();
 
