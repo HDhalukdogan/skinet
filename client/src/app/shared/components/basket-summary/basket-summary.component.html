@@ -1,7 +1,7 @@
 <ng-container *ngIf="items.length > 0" >
     <div class="table-responsive">
         <table class="table table-borderless">
-            <thead [class.thead-light]="isBasket || isOrder" class="border-0 py-2">
+            <thead [class.bg-light]="isBasket || isOrder" class="border-0 py-2">
                 <tr>
                     <th scope="col" >
                         <div class="p-2 px-3 text-uppercase">Product</div>
@@ -33,7 +33,7 @@
                                 </h5>
                                 <span
                                     *ngIf="item.type"
-                                    class="text-muted font-weight-normal font-italic d-block">Type:
+                                    class="text-muted fw--normal fst-italic d-block">Type:
                                     {{item.type}}</span>
                             </div>
     
@@ -44,7 +44,7 @@
                         <div class="d-flex align-items-center" [class.justify-content-center]="!isBasket">
                             <i *ngIf="isBasket" (click)="decrementItemQuantity(item)" class="fa fa-minus-circle text-warning me-2"
                                 style="cursor: pointer; font-size: 2em;"></i>
-                            <span class="font-weight-bold" style="font-size: 1.5em;">
+                            <span class="fw--bold" style="font-size: 1.5em;">
                                 {{item.quantity}}
                             </span>
                             <i *ngIf="isBasket" (click)="incrementItemQuantity(item)" class="fa fa-plus-circle text-warning mx-2"
