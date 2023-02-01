@@ -12,7 +12,6 @@ import { IBasketTotals } from '../shared/models/basket';
 })
 export class CheckoutComponent implements OnInit {
   checkoutForm: UntypedFormGroup;
-  basketTotals$: Observable<IBasketTotals>;
 
   constructor(private fb: UntypedFormBuilder, private accountService: AccountService, private basketService: BasketService) { }
 
@@ -20,7 +19,6 @@ export class CheckoutComponent implements OnInit {
     this.createCheckoutForm();
     this.getAddressFormValues();
     this.getDeliveryMethodValue();
-    this.basketTotals$ = this.basketService.basketTotal$;
   }
 
 
